@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.nav.telstra.R
 import com.nav.telstra.features.feedlist.model.Feed
+import com.nav.telstra.utils.getProgressDrawable
+import com.nav.telstra.utils.loadImage
 import kotlinx.android.synthetic.main.feed_item_row.view.*
 
 class FeedListAdapter(private val feedList: ArrayList<Feed>) : RecyclerView.Adapter<FeedListAdapter.FeedViewHolder>() {
@@ -19,10 +21,24 @@ class FeedListAdapter(private val feedList: ArrayList<Feed>) : RecyclerView.Adap
     override fun getItemCount() = feedList.size
 
     override fun onBindViewHolder(holder: FeedViewHolder, position: Int) {
-        holder.view.txt_title.text = feedList[position].title
-        holder.view.txt_description.text = feedList[position].description
+        val feed = feedList[position]
+
+        holder.view.txt_title.text = feed.title
+        holder.view.txt_description.text = feed.description
+
+        feed.image_url?.let {
+            holder.view.imageView.visibility = View.VISIBLE
+            holder.view.imageView.loadImage(feed.image_url, getProgressDrawable(holder.view.imageView.context))
+        }
     }
 
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
 
     class FeedViewHolder(var view : View) : RecyclerView.ViewHolder (view)
 
