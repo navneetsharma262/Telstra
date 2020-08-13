@@ -5,13 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.nav.telstra.R
 import com.nav.telstra.features.feedlist.viewModel.FeedListViewModel
+import kotlinx.android.synthetic.main.fragment_feed_list.*
 
 class FeedListFragment : Fragment() {
 
     private lateinit var feedListViewModel: FeedListViewModel
+    private val listAdapter = FeedListAdapter(arrayListOf())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,5 +33,42 @@ class FeedListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        recyclerView_feeds.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = listAdapter
+        }
+
+        feedListViewModel.fetchFeedList()
+
+        observeViewModel()
+    }
+
+    private fun observeViewModel() {
+
+        feedListViewModel.feedData.observe(viewLifecycleOwner, Observer { feedResponse ->
+            feedResponse?.let {
+                recyclerView_feeds.visibility = View.VISIBLE
+                listAdapter.updateFeedList(feedResponse.feedsList)
+            }
+        })
+
+        feedListViewModel.loading.observe(viewLifecycleOwner, Observer {
+
+            progressBar.visibility = if(it) View.VISIBLE else View.GONE
+
+            if(it) {
+                recyclerView_feeds.visibility = View.GONE
+                txt_error.visibility = View.GONE
+            }
+        })
+
+        feedListViewModel.errorMsg.observe(viewLifecycleOwner, Observer { errorMsg ->
+            errorMsg?.let {
+                txt_error.text = errorMsg
+                recyclerView_feeds.visibility = View.GONE
+                txt_error.visibility = View.VISIBLE
+            }
+        })
     }
 }
