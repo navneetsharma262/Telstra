@@ -55,6 +55,7 @@ class FeedListFragment : Fragment() {
 
         feedListViewModel.feedData.observe(viewLifecycleOwner, Observer { feedResponse ->
             feedResponse?.let {
+                activity?.title = feedResponse.title
                 recyclerView_feeds.visibility = View.VISIBLE
                 listAdapter.updateFeedList(feedResponse.feedsList)
             }
