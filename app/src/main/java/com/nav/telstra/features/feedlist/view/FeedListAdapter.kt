@@ -26,6 +26,7 @@ class FeedListAdapter(private val feedList: ArrayList<Feed>) : RecyclerView.Adap
         holder.view.txt_title.text = feed.title
         holder.view.txt_description.text = feed.description
 
+        // Showing and loading the image only when image url is not null
         feed.image_url?.let {
             holder.view.imageView.visibility = View.VISIBLE
             holder.view.imageView.loadImage(feed.image_url, getProgressDrawable(holder.view.imageView.context))

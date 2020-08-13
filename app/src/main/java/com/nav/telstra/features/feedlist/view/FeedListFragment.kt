@@ -39,6 +39,13 @@ class FeedListFragment : Fragment() {
             adapter = listAdapter
         }
 
+        item_swipe_to_refresh.setOnRefreshListener {
+            // Code to refresh the list here.
+            item_swipe_to_refresh.isRefreshing = false
+            feedListViewModel.fetchFeedList()
+        }
+
+
         feedListViewModel.fetchFeedList()
 
         observeViewModel()
