@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.nav.telstra.R
 import com.nav.telstra.features.feedlist.viewModel.FeedListViewModel
+import com.nav.telstra.utils.isNetworkConnected
 import kotlinx.android.synthetic.main.fragment_feed_list.*
 
 class FeedListFragment : Fragment() {
@@ -42,13 +43,22 @@ class FeedListFragment : Fragment() {
         item_swipe_to_refresh.setOnRefreshListener {
             // Code to refresh the list here.
             item_swipe_to_refresh.isRefreshing = false
-            feedListViewModel.fetchFeedList()
+            fetchData()
         }
 
-
-        feedListViewModel.fetchFeedList()
+        fetchData()
 
         observeViewModel()
+    }
+
+    private fun fetchData() {
+        if(isNetworkConnected(context)) {
+            feedListViewModel.fetchFeedList()
+        } else {
+            recyclerView_feeds.visibility = View.GONE
+            txt_error.visibility = View.VISIBLE
+            txt_error.text = getString(R.string.msg_no_internet)
+        }
     }
 
     private fun observeViewModel() {

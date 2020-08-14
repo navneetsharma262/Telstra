@@ -1,6 +1,8 @@
 package com.nav.telstra.utils
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.widget.ImageView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
@@ -23,4 +25,10 @@ fun ImageView.loadImage(uri : String?, drawable: CircularProgressDrawable) {
         .setDefaultRequestOptions(option)
         .load(uri)
         .into(this)
+}
+
+fun isNetworkConnected(context: Context?) : Boolean {
+    val cm = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+    val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
+    return activeNetwork?.isConnected == true
 }
