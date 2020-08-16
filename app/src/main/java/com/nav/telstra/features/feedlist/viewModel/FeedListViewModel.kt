@@ -16,7 +16,8 @@ class FeedListViewModel(application: Application) : BaseViewModel(application) {
     private var job: Job? = null
     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
         print("Error: ${throwable.localizedMessage}")
-        errorMsg.value = throwable.localizedMessage
+        loading.postValue(false)
+        errorMsg.postValue(throwable.localizedMessage)
     }
 
     val errorMsg = MutableLiveData<String>()
@@ -27,14 +28,14 @@ class FeedListViewModel(application: Application) : BaseViewModel(application) {
         loading.value = true
         job = CoroutineScope(Dispatchers.IO + exceptionHandler).launch {
             val apiResponse = apiService.getFeedList()
-            if (apiResponse.isSuccessful) {
-                withContext(Dispatchers.Main) {
+            withContext(Dispatchers.Main) {
+                if (apiResponse.isSuccessful) {
                     loading.value = false
                     feedData.value = apiResponse.body()
+                } else {
+                    print(apiResponse.errorBody())
+                    errorMsg.value = apiResponse.errorBody().toString()
                 }
-            } else {
-                print(apiResponse.errorBody())
-                errorMsg.value = apiResponse.errorBody().toString()
             }
         }
     }

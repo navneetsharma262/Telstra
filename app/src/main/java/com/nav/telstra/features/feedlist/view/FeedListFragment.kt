@@ -35,11 +35,13 @@ class FeedListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Setting up the RecyclerView
         recyclerView_feeds.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = listAdapter
         }
 
+        // Pull to refresh feature
         item_swipe_to_refresh.setOnRefreshListener {
             // Code to refresh the list here.
             item_swipe_to_refresh.isRefreshing = false
@@ -48,7 +50,7 @@ class FeedListFragment : Fragment() {
 
         fetchData()
 
-        observeViewModel()
+        observeViewModel() //setup function for observer live data
     }
 
     private fun fetchData() {

@@ -17,6 +17,7 @@ fun getProgressDrawable(context: Context) : CircularProgressDrawable {
     }
 }
 
+// Extension function for ImageView
 fun ImageView.loadImage(uri : String?, drawable: CircularProgressDrawable) {
     val option = RequestOptions()
         .placeholder(drawable)
@@ -27,6 +28,7 @@ fun ImageView.loadImage(uri : String?, drawable: CircularProgressDrawable) {
         .into(this)
 }
 
+// Network check function
 fun isNetworkConnected(context: Context?) : Boolean {
     val cm = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val activeNetwork: NetworkInfo? = cm.activeNetworkInfo
